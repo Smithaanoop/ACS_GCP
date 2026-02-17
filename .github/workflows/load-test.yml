@@ -38,6 +38,10 @@ jobs:
       - name: Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
       
+      - name: Install GKE auth plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin --quiet
+      
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
       
@@ -71,30 +75,29 @@ jobs:
       - name: Generate Report
         if: always()
         run: |
-          cat > load-test-report.md << 'EOF'
-          # Load Test Report
-          
-          Generated: $(date '+%Y-%m-%d %H:%M:%S')
-          
-          ## Test Configuration
-          - Concurrent Connections: 100
-          - Duration: 30 seconds
-          - App Engine: ${{ env.APP_ENGINE_URL }}
-          - GKE: http://${{ env.GKE_SERVICE_IP }}
-          
-          ## Status
-          - App Engine: ${{ steps.ae-test.outcome }}
-          - GKE: ${{ steps.gke-test.outcome }}
-          
-          ## Results Available
-          Check artifacts for detailed load test outputs
-          
-          ## Resources
-          - [App Engine Metrics](https://console.cloud.google.com/appengine/metrics)
-          - [GKE Workloads](https://console.cloud.google.com/kubernetes/workloads)
-          - [Cloud Monitoring](https://console.cloud.google.com/monitoring)
-          
-          EOF
+          {
+            echo "# Load Test Report"
+            echo ""
+            echo "Generated: $(date '+%Y-%m-%d %H:%M:%S')"
+            echo ""
+            echo "## Test Configuration"
+            echo "- Concurrent Connections: 100"
+            echo "- Duration: 30 seconds"
+            echo "- App Engine: ${{ env.APP_ENGINE_URL }}"
+            echo "- GKE: http://${{ env.GKE_SERVICE_IP }}"
+            echo ""
+            echo "## Status"
+            echo "- App Engine: ${{ steps.ae-test.outcome }}"
+            echo "- GKE: ${{ steps.gke-test.outcome }}"
+            echo ""
+            echo "## Results Available"
+            echo "Check artifacts for detailed load test outputs"
+            echo ""
+            echo "## Resources"
+            echo "- [App Engine Metrics](https://console.cloud.google.com/appengine/metrics)"
+            echo "- [GKE Workloads](https://console.cloud.google.com/kubernetes/workloads)"
+            echo "- [Cloud Monitoring](https://console.cloud.google.com/monitoring)"
+          } > load-test-report.md
           cat load-test-report.md
       
       - name: Upload Report
@@ -122,47 +125,46 @@ jobs:
       
       - name: Create Comparison Summary
         run: |
-          cat > comparison-summary.md << 'EOF'
-          # GCP Platform Comparison
-          
-          ## Deployment Summary
-          ✅ Both Google App Engine and Google Kubernetes Engine deployed and running
-          
-          ## Performance Characteristics
-          
-          | Aspect | App Engine | GKE |
-          |--------|-----------|-----|
-          | Deployment Speed | Fast (1-2 min) | Medium (3-5 min) |
-          | Scaling | 1-10 instances | 3-10 pods (HPA) |
-          | Management | Fully Managed | Cluster Managed |
-          | Customization | Limited | Full Control |
-          
-          ## Load Test Execution
-          - Configuration: 100 concurrent requests, 30 seconds
-          - App Engine Endpoint: ✅ Deployed
-          - GKE Endpoint: ✅ Deployed
-          
-          ## Monitoring & Metrics
-          
-          Access detailed performance metrics:
-          1. [Google Cloud Console](https://console.cloud.google.com)
-          2. App Engine Metrics: https://console.cloud.google.com/appengine/metrics
-          3. GKE Dashboard: https://console.cloud.google.com/kubernetes/workloads
-          4. Cloud Monitoring: https://console.cloud.google.com/monitoring
-          
-          ## Recommendations
-          
-          - **Use App Engine for**: Quick launches, minimal ops, variable load
-          - **Use GKE for**: Complex applications, fine-grained control, predictable load
-          - **Hybrid Approach**: Deploy to both, use load balancer to route traffic
-          
-          ## Next Steps
-          1. Review auto-scaling behavior in Cloud Console (wait 60-90 seconds after load)
-          2. Check response times and error rates
-          3. Monitor resource utilization
-          4. Adjust scaling policies as needed
-          
-          EOF
+          {
+            echo "# GCP Platform Comparison"
+            echo ""
+            echo "## Deployment Summary"
+            echo "✅ Both Google App Engine and Google Kubernetes Engine deployed and running"
+            echo ""
+            echo "## Performance Characteristics"
+            echo ""
+            echo "| Aspect | App Engine | GKE |"
+            echo "|--------|-----------|-----|"
+            echo "| Deployment Speed | Fast (1-2 min) | Medium (3-5 min) |"
+            echo "| Scaling | 1-10 instances | 3-10 pods (HPA) |"
+            echo "| Management | Fully Managed | Cluster Managed |"
+            echo "| Customization | Limited | Full Control |"
+            echo ""
+            echo "## Load Test Execution"
+            echo "- Configuration: 100 concurrent requests, 30 seconds"
+            echo "- App Engine Endpoint: ✅ Deployed"
+            echo "- GKE Endpoint: ✅ Deployed"
+            echo ""
+            echo "## Monitoring & Metrics"
+            echo ""
+            echo "Access detailed performance metrics:"
+            echo "1. [Google Cloud Console](https://console.cloud.google.com)"
+            echo "2. App Engine Metrics: https://console.cloud.google.com/appengine/metrics"
+            echo "3. GKE Dashboard: https://console.cloud.google.com/kubernetes/workloads"
+            echo "4. Cloud Monitoring: https://console.cloud.google.com/monitoring"
+            echo ""
+            echo "## Recommendations"
+            echo ""
+            echo "- **Use App Engine for**: Quick launches, minimal ops, variable load"
+            echo "- **Use GKE for**: Complex applications, fine-grained control, predictable load"
+            echo "- **Hybrid Approach**: Deploy to both, use load balancer to route traffic"
+            echo ""
+            echo "## Next Steps"
+            echo "1. Review auto-scaling behavior in Cloud Console (wait 60-90 seconds after load)"
+            echo "2. Check response times and error rates"
+            echo "3. Monitor resource utilization"
+            echo "4. Adjust scaling policies as needed"
+          } > comparison-summary.md
           cat comparison-summary.md
       
       - name: Upload Comparison
