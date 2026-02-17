@@ -108,9 +108,11 @@ jobs:
       
       - name: Health Check - App Engine
         run: |
-          for i in {1..30}; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://$APP_ENGINE_URL/health)
-            if [ $STATUS -eq 200 ]; then
+          i=0
+          while [ $i -lt 30 ]; do
+            i=$((i+1))
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://$APP_ENGINE_URL/health" 2>/dev/null || echo "000")
+            if [ "$STATUS" = "200" ]; then
               echo "✓ App Engine healthy"
               exit 0
             fi
@@ -173,9 +175,11 @@ jobs:
       
       - name: Health Check - GKE
         run: |
-          for i in {1..30}; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://$GKE_SERVICE_IP/health 2>/dev/null || echo "000")
-            if [ $STATUS -eq 200 ]; then
+          i=0
+          while [ $i -lt 30 ]; do
+            i=$((i+1))
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://$GKE_SERVICE_IP/health" 2>/dev/null || echo "000")
+            if [ "$STATUS" = "200" ]; then
               echo "✓ GKE healthy"
               exit 0
             fi
