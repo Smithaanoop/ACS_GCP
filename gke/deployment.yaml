@@ -34,7 +34,7 @@ spec:
       
       containers:
       - name: app
-        image: gcr.io/acs-stuttgart-2026-semester/gcp-compare-app:1.0
+        image: gcr.io/acs-st-2026/gcp-compare-app:1.0
         imagePullPolicy: Always
         
         env:
