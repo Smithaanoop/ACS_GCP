@@ -6,8 +6,8 @@ on:
     types: [completed]
 
 env:
-  APP_ENGINE_URL: https://acs-stuttgart-2026-semester.ey.r.appspot.com
-  GCP_PROJECT_ID: acs-stuttgart-2026-semester
+  APP_ENGINE_URL: https://acs-st-2026.ey.r.appspot.com
+  GCP_PROJECT_ID: acs-st-2026
 
 jobs:
   load-test:
