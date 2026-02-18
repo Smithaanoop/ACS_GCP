@@ -8,12 +8,12 @@ on:
   workflow_dispatch: {}  # Allows manual trigger from Actions tab
 
 env:
-  GCP_PROJECT_ID: acs-stuttgart-2026-semester
+  GCP_PROJECT_ID: acs-st-2026
   GCP_REGION: us-central1
   APP_ENGINE_SERVICE: default
   GKE_CLUSTER: gcp-compare-cluster
   GKE_ZONE: us-central1-a
-  DOCKER_IMAGE: gcr.io/acs-stuttgart-2026-semester/gcp-compare-app
+  DOCKER_IMAGE: gcr.io/acs-st-2026/gcp-compare-app
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
